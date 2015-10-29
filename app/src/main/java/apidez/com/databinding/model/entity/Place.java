@@ -1,5 +1,7 @@
 package apidez.com.databinding.model.entity;
 
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -11,7 +13,7 @@ import java.util.UUID;
 /**
  * Created by nongdenchet on 10/21/15.
  */
-public class Place implements Parcelable {
+public class Place extends BaseObservable implements Parcelable {
     @SerializedName("icon")
     private String icon;
 
@@ -50,6 +52,7 @@ public class Place implements Parcelable {
         this.types = types;
     }
 
+    @Bindable
     public String getIcon() {
         return icon;
     }
@@ -58,6 +61,7 @@ public class Place implements Parcelable {
         return id;
     }
 
+    @Bindable
     public String getName() {
         return name;
     }

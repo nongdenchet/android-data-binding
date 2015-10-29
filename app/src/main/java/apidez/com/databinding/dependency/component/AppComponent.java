@@ -3,6 +3,7 @@ package apidez.com.databinding.dependency.component;
 import javax.inject.Singleton;
 
 import apidez.com.databinding.dependency.module.AppModule;
+import apidez.com.databinding.dependency.module.PlacesModule;
 import apidez.com.databinding.dependency.module.PurchaseModule;
 import dagger.Component;
 
@@ -13,4 +14,5 @@ import dagger.Component;
 @Component(modules = {AppModule.class})
 public interface AppComponent {
     PurchaseComponent plus(PurchaseModule purchaseModule);
+    PlacesComponent plus(PlacesModule placesModule);
 }

@@ -25,10 +25,11 @@ import rx.schedulers.Schedulers;
  * Created by nongdenchet on 10/28/15.
  */
 public class PurchaseActivity extends BaseActivity implements IPurchaseHandler {
+    private ProgressDialog mProgressDialog;
+    private ActivityPurchaseBinding binding;
+
     @Inject
     IPurchaseViewModel mViewModel;
-
-    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,12 +49,16 @@ public class PurchaseActivity extends BaseActivity implements IPurchaseHandler {
     }
 
     private void bindViewModel() {
-        ActivityPurchaseBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_purchase);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_purchase);
         binding.setViewModel(mViewModel);
         binding.setHandler(this);
     }
 
     private void setUpView() {
+        // Toolbar
+        setSupportActionBar(binding.toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         // Progress dialog
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage(getString(R.string.loading));
