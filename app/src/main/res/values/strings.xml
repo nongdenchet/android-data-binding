@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Data Binding</string>
+    <string name="action_settings">Settings</string>
+    <string name="purchase_activity_label">Purchase</string>
+    <string name="error_credit_card">Invalid Credit Card</string>
+    <string name="error_email">Invalid Email</string>
+    <string name="success">Success</string>
+    <string name="error">Error</string>
+    <string name="empty"></string>
+    <string name="icon_des">icon</string>
+    <string name="title_places">Places</string>
+    <string name="menu_places_sort">Sort</string>
+    <string name="loading">Loading…</string>>
+</resources>
