@@ -5,7 +5,6 @@ import android.databinding.Bindable;
 import android.databinding.ObservableArrayList;
 import android.support.annotation.NonNull;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -62,11 +61,9 @@ public class PlacesViewModel extends BaseObservable implements IPlacesViewModel 
         if (type.equalsIgnoreCase("all")) {
             mPlaces.addAll(allPlaces);
         } else {
-            List<Place> newPlaces = new ArrayList<>();
             Observable.from(allPlaces)
                     .filter(place -> place.getTypes().contains(getApiType(type)))
-                    .subscribe(newPlaces::add);
-            mPlaces.addAll(newPlaces);
+                    .subscribe(mPlaces::add);
         }
     }
 
