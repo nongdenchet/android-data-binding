@@ -86,7 +86,7 @@ public class PlacesFragment extends BaseFragment {
                 .takeUntil(preDestroy())
                 .doOnSubscribe(mProgressDialog::show)
                 .doOnTerminate(mProgressDialog::hide)
-                .subscribe(succes -> {}, throwable -> {});
+                .subscribe(success -> {}, throwable -> {});
     }
 
     @Override

@@ -96,7 +96,7 @@ public class PurchaseActivity extends BaseActivity implements IPurchaseHandler {
                     .takeUntil(preDestroy())
                     .doOnSubscribe(mProgressDialog::show)
                     .doOnTerminate(mProgressDialog::hide)
-                    .subscribe(done -> {
+                    .subscribe(success -> {
                         UiUtils.showDialog(getString(R.string.success), this);
                     }, throwable -> {
                         UiUtils.showDialog(getString(R.string.error), this);
