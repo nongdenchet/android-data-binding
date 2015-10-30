@@ -5,6 +5,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 
 import javax.inject.Inject;
@@ -98,5 +99,15 @@ public class PurchaseActivity extends BaseActivity implements IPurchaseHandler {
                 }, throwable -> {
                     UiUtils.showDialog(getString(R.string.error), this);
                 });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
