@@ -9,7 +9,6 @@ import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
 
 import java.util.Collections;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import apidez.com.databinding.R;
 import apidez.com.databinding.model.api.PurchaseApi;
@@ -19,7 +18,6 @@ import rx.observers.TestSubscriber;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -112,99 +110,5 @@ public class PurchaseViewModelTest {
         purchaseViewModel.submit().subscribe(testSubscriber);
         testSubscriber.assertReceivedOnNext(Collections.singletonList(true));
         verify(purchaseApi).submitPurchase("412341234123", "ndc@gmail.com");
-    }
-
-    @Test
-    public void submitTimeout() throws Exception {
-        purchaseViewModel.setCreditCard("412341234123");
-        purchaseViewModel.setEmail("ndc@gmail.com");
-        when(purchaseApi.submitPurchase(anyString(), anyString())).thenReturn(
-                Observable.create(subscriber -> {
-                    try {
-                        Thread.sleep(5100);
-                        subscriber.onNext(true);
-                        subscriber.onCompleted();
-                    } catch (InterruptedException e) {
-                        subscriber.onError(e);
-                    }
-                })
-        );
-        try {
-            boolean success = purchaseViewModel.submit().toBlocking().first();
-            if (success) fail("Should be timeout");
-        } catch (Exception ignored) {
-            // The test pass here, it should be timeout
-        }
-    }
-
-    @Test
-    public void submitOnTime() throws Exception {
-        purchaseViewModel.setCreditCard("412341234123");
-        purchaseViewModel.setEmail("ndc@gmail.com");
-        when(purchaseApi.submitPurchase(anyString(), anyString())).thenReturn(
-                Observable.create(subscriber -> {
-                    try {
-                        Thread.sleep(4900);
-                        subscriber.onNext(true);
-                        subscriber.onCompleted();
-                    } catch (InterruptedException e) {
-                        subscriber.onError(e);
-                    }
-                })
-        );
-        try {
-            boolean success = purchaseViewModel.submit().toBlocking().first();
-            assertTrue(success);
-        } catch (Exception ignored) {
-            // The test pass here, it should be timeout
-            fail("Should be on time");
-        }
-    }
-
-    @Test
-    public void submitRetry() throws Exception {
-        AtomicInteger atomicInteger = new AtomicInteger(0);
-        purchaseViewModel.setCreditCard("412341234123");
-        purchaseViewModel.setEmail("ndc@gmail.com");
-        when(purchaseApi.submitPurchase(anyString(), anyString())).thenReturn(
-                Observable.create(subscriber -> {
-                    if (atomicInteger.getAndIncrement() < 3) {
-                        subscriber.onError(new Exception());
-                    } else {
-                        subscriber.onNext(true);
-                        subscriber.onCompleted();
-                    }
-                })
-        );
-        try {
-            boolean success = purchaseViewModel.submit().toBlocking().first();
-            verify(purchaseApi).submitPurchase(anyString(), anyString());
-            assertTrue(success);
-        } catch (Exception ignored) {
-            fail("Have to retry three times");
-        }
-    }
-
-    @Test
-    public void submitExceedRetry() throws Exception {
-        AtomicInteger atomicInteger = new AtomicInteger(0);
-        purchaseViewModel.setCreditCard("412341234123");
-        purchaseViewModel.setEmail("ndc@gmail.com");
-        when(purchaseApi.submitPurchase(anyString(), anyString())).thenReturn(
-                Observable.create(subscriber -> {
-                    if (atomicInteger.getAndIncrement() < 4) {
-                        subscriber.onError(new Exception());
-                    } else {
-                        subscriber.onNext(true);
-                        subscriber.onCompleted();
-                    }
-                })
-        );
-        try {
-            purchaseViewModel.submit().toBlocking().first();
-            fail("Should be out of retry");
-        } catch (Exception ignored) {
-            // Test pass here
-        }
     }
 }

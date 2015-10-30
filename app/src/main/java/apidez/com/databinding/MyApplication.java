@@ -12,9 +12,9 @@ import apidez.com.databinding.dependency.module.AppModule;
  * Created by nongdenchet on 10/2/15.
  */
 public class MyApplication extends Application {
-
-    protected AppComponent mAppComponent;
     private static Context mContext;
+    protected AppComponent mAppComponent;
+    protected ComponentBuilder mComponentBuilder;
 
     @Override
     public void onCreate() {
@@ -25,10 +25,17 @@ public class MyApplication extends Application {
         mAppComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule())
                 .build();
+
+        // Create component builder
+        mComponentBuilder = new ComponentBuilder(mAppComponent);
     }
 
     public AppComponent component() {
         return mAppComponent;
+    }
+
+    public ComponentBuilder builder() {
+        return mComponentBuilder;
     }
 
     public static Context context() {

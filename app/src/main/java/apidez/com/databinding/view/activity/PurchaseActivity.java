@@ -13,7 +13,6 @@ import javax.inject.Inject;
 import apidez.com.databinding.MyApplication;
 import apidez.com.databinding.R;
 import apidez.com.databinding.databinding.ActivityPurchaseBinding;
-import apidez.com.databinding.dependency.module.PurchaseModule;
 import apidez.com.databinding.utils.TextWatcherAdapter;
 import apidez.com.databinding.utils.UiUtils;
 import apidez.com.databinding.view.handler.IPurchaseHandler;
@@ -38,8 +37,9 @@ public class PurchaseActivity extends BaseActivity implements IPurchaseHandler {
         setContentView(R.layout.activity_purchase);
 
         // Setup DI
-        ((MyApplication) getApplication()).component()
-                .plus(new PurchaseModule())
+        ((MyApplication) getApplication())
+                .builder()
+                .purchaseComponent()
                 .inject(this);
 
         // bind viewmodel
@@ -88,17 +88,20 @@ public class PurchaseActivity extends BaseActivity implements IPurchaseHandler {
 
     @Override
     public View.OnClickListener onSubmit() {
-        return v -> mViewModel.submit()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .takeUntil(preDestroy())
-                .doOnSubscribe(mProgressDialog::show)
-                .doOnTerminate(mProgressDialog::hide)
-                .subscribe(done -> {
-                    UiUtils.showDialog(getString(R.string.success), this);
-                }, throwable -> {
-                    UiUtils.showDialog(getString(R.string.error), this);
-                });
+        return v -> {
+            if (!mViewModel.canSubmit().get()) return;
+            mViewModel.submit()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .takeUntil(preDestroy())
+                    .doOnSubscribe(mProgressDialog::show)
+                    .doOnTerminate(mProgressDialog::hide)
+                    .subscribe(done -> {
+                        UiUtils.showDialog(getString(R.string.success), this);
+                    }, throwable -> {
+                        UiUtils.showDialog(getString(R.string.error), this);
+                    });
+        };
     }
 
     @Override

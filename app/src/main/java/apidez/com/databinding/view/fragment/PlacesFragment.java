@@ -17,7 +17,6 @@ import javax.inject.Inject;
 import apidez.com.databinding.MyApplication;
 import apidez.com.databinding.R;
 import apidez.com.databinding.databinding.FragmentPlacesBinding;
-import apidez.com.databinding.dependency.module.PlacesModule;
 import apidez.com.databinding.view.adapter.PlacesAdapter;
 import apidez.com.databinding.viewmodel.IPlacesViewModel;
 import rx.android.schedulers.AndroidSchedulers;
@@ -48,8 +47,8 @@ public class PlacesFragment extends BaseFragment {
 
         // Setup DI
         ((MyApplication) getActivity().getApplication())
-                .component()
-                .plus(new PlacesModule())
+                .builder()
+                .placesComponent()
                 .inject(this);
     }
 

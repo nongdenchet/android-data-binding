@@ -10,7 +10,6 @@ import org.mockito.Mockito;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import apidez.com.databinding.model.api.IPlacesApi;
 import apidez.com.databinding.model.entity.GoogleSearchResult;
@@ -19,10 +18,7 @@ import apidez.com.databinding.utils.TestDataUtils;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -34,14 +30,12 @@ public class PlacesViewModelTest {
     private PlacesViewModel placesViewModel;
     private IPlacesApi placesApi;
     private TestSubscriber<Boolean> testSubscriber;
-    private TestSubscriber<List<Place>> testSubscriberPlaces;
 
     @Before
     public void setUpViewModel() {
         placesApi = Mockito.mock(IPlacesApi.class);
         placesViewModel = new PlacesViewModel(placesApi);
         testSubscriber = TestSubscriber.create();
-        testSubscriberPlaces = TestSubscriber.create();
         when(placesApi.placesResult()).thenReturn(testDataObservable());
     }
 
@@ -93,91 +87,6 @@ public class PlacesViewModelTest {
     @Test
     public void filterTheater() {
         assertEquals(getAndFilterWith("theater").size(), 3);
-    }
-
-    @Test
-    public void fetchTimeout() throws Exception {
-        when(placesApi.placesResult()).thenReturn(
-                Observable.create(subscriber -> {
-                    try {
-                        Thread.sleep(5100);
-                        subscriber.onNext(TestDataUtils.nearByData());
-                        subscriber.onCompleted();
-                    } catch (InterruptedException e) {
-                        subscriber.onError(e);
-                    }
-                })
-        );
-        try {
-            boolean success = placesViewModel.fetchAllPlaces().toBlocking().first();
-            if (success) fail("Should be timeout");
-        } catch (Exception ignored) {
-            // The test pass here, it should be timeout
-        }
-    }
-
-    @Test
-    public void fetchOnTime() throws Exception {
-        when(placesApi.placesResult()).thenReturn(
-                Observable.create(subscriber -> {
-                    try {
-                        Thread.sleep(4900);
-                        subscriber.onNext(TestDataUtils.nearByData());
-                        subscriber.onCompleted();
-                    } catch (InterruptedException e) {
-                        subscriber.onError(e);
-                    }
-                })
-        );
-        try {
-            boolean success = placesViewModel.fetchAllPlaces().toBlocking().first();
-            assertTrue(success);
-        } catch (Exception ignored) {
-            fail("Should be on time");
-        }
-    }
-
-    @Test
-    public void fetchRetry() throws Exception {
-        AtomicInteger atomicInteger = new AtomicInteger(0);
-        when(placesApi.placesResult()).thenReturn(
-                Observable.create(subscriber -> {
-                    if (atomicInteger.getAndIncrement() < 3) {
-                        subscriber.onError(new Exception());
-                    } else {
-                        subscriber.onNext(TestDataUtils.nearByData());
-                        subscriber.onCompleted();
-                    }
-                })
-        );
-        try {
-            boolean success = placesViewModel.fetchAllPlaces().toBlocking().first();
-            verify(placesApi).placesResult();
-            assertTrue(success);
-        } catch (Exception ignored) {
-            fail("Have to retry three times");
-        }
-    }
-
-    @Test
-    public void fetchExceedRetry() throws Exception {
-        AtomicInteger atomicInteger = new AtomicInteger(0);
-        when(placesApi.placesResult()).thenReturn(
-                Observable.create(subscriber -> {
-                    if (atomicInteger.getAndIncrement() < 4) {
-                        subscriber.onError(new Exception());
-                    } else {
-                        subscriber.onNext(TestDataUtils.nearByData());
-                        subscriber.onCompleted();
-                    }
-                })
-        );
-        try {
-            placesViewModel.fetchAllPlaces().toBlocking().first();
-            fail("Should be out of retry");
-        } catch (Exception ignored) {
-            // Test pass here
-        }
     }
 
     private List<Place> getAndFilterWith(String type) {
