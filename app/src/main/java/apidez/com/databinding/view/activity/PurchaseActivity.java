@@ -5,6 +5,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -88,19 +89,24 @@ public class PurchaseActivity extends BaseActivity implements IPurchaseHandler {
 
     @Override
     public View.OnClickListener onSubmit() {
+        return v -> mViewModel.submit()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .takeUntil(preDestroy())
+                .doOnSubscribe(mProgressDialog::show)
+                .doOnTerminate(mProgressDialog::hide)
+                .subscribe(success -> {
+                    UiUtils.showDialog(getString(R.string.success), this);
+                }, throwable -> {
+                    UiUtils.showDialog(getString(R.string.error), this);
+                });
+    }
+
+    @Override
+    public View.OnClickListener onInvalid() {
         return v -> {
-            if (!mViewModel.canSubmit().get()) return;
-            mViewModel.submit()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .takeUntil(preDestroy())
-                    .doOnSubscribe(mProgressDialog::show)
-                    .doOnTerminate(mProgressDialog::hide)
-                    .subscribe(success -> {
-                        UiUtils.showDialog(getString(R.string.success), this);
-                    }, throwable -> {
-                        UiUtils.showDialog(getString(R.string.error), this);
-                    });
+            // Do something
+            Log.d("APP", "Invalid");
         };
     }
 

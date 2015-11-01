@@ -10,4 +10,5 @@ public interface IPurchaseHandler {
     TextWatcher emailWatcher();
     TextWatcher creditCardWatcher();
     View.OnClickListener onSubmit();
+    View.OnClickListener onInvalid();
 }

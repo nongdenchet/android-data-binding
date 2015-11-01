@@ -35,7 +35,7 @@ import static org.mockito.Mockito.when;
  */
 @MediumTest
 @RunWith(JUnit4.class)
-public class PlacesFragmentTest {
+public class PlacesFragmentIntegrateTest {
 
     @Rule
     public ActivityTestRule<TestActivity> activityTestRule =

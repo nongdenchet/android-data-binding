@@ -43,7 +43,7 @@ import static org.hamcrest.Matchers.not;
  */
 @MediumTest
 @RunWith(AndroidJUnit4.class)
-public class PurchaseActivityTest {
+public class PurchaseActivityIntegrateTest {
     private String FAIL_CARD = "222222222222";
 
     @Rule
