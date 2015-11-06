@@ -24,7 +24,6 @@ import rx.schedulers.Schedulers;
 
 public class PlacesFragment extends BaseFragment {
     private ProgressDialog mProgressDialog;
-    private PlacesAdapter mPlacesAdapter;
     private FragmentPlacesBinding binding;
 
     @Inject
