@@ -129,7 +129,7 @@ public class PurchaseActivityIntegrateTest {
         onView(withId(R.id.creditCard)).perform(typeText("411111111111"));
         onView(withId(R.id.email)).perform(typeText("rain@gmail.com"));
         onView(withId(R.id.btnSubmit)).perform(click());
-        onView(withText(R.string.loading)).check(matches(isDisplayed()));
+        waitText("Success", 3000);
     }
 
     @Test

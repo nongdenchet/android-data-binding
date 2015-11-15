@@ -79,9 +79,9 @@
             android:layout_margin="8dp"
             android:background="@{viewModel.canSubmit ? @drawable/bg_submit : @drawable/bg_inactive_submit}"
             android:gravity="center"
-            android:onClick="@{viewModel.canSubmit ? handler.onSubmit : handler.onInvalid}"
             android:text="SUBMIT"
             android:textColor="#ffffff"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            app:onClickListener="@{viewModel.canSubmit ? handler.onSubmit : handler.onInvalid}"/>
     </RelativeLayout>
 </layout>
