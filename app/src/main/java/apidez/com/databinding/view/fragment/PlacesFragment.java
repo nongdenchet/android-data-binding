@@ -3,6 +3,7 @@ package apidez.com.databinding.view.fragment;
 import android.app.ProgressDialog;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
@@ -20,10 +21,10 @@ import apidez.com.databinding.databinding.FragmentPlacesBinding;
 import apidez.com.databinding.view.adapter.PlacesAdapter;
 import apidez.com.databinding.viewmodel.IPlacesViewModel;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.schedulers.Schedulers;
 
 public class PlacesFragment extends BaseFragment {
-    private ProgressDialog mProgressDialog;
     private FragmentPlacesBinding binding;
 
     @Inject
@@ -68,23 +69,23 @@ public class PlacesFragment extends BaseFragment {
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerView.setAdapter(new PlacesAdapter(getContext()));
 
-        // Progress dialog setup
-        mProgressDialog = new ProgressDialog(getActivity());
-        mProgressDialog.setMessage(getString(R.string.loading));
-        mProgressDialog.setCancelable(false);
+        // Swipe to refresh
+        binding.swipeRefresh.setOnRefreshListener(this::downloadData);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        downloadData();
+    }
 
+    private void downloadData() {
         // fetch all places
         mViewModel.fetchAllPlaces()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .takeUntil(preDestroy())
-                .doOnSubscribe(mProgressDialog::show)
-                .doOnTerminate(mProgressDialog::hide)
+                .doOnTerminate(() -> binding.swipeRefresh.setRefreshing(false))
                 .subscribe(success -> {}, throwable -> {});
     }
 

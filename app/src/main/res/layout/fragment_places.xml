@@ -25,13 +25,18 @@
             app:title="@string/title_places"
             app:titleTextColor="@color/action_bar_title"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        <android.support.v4.widget.SwipeRefreshLayout
             android:layout_below="@+id/toolbar"
-            android:layout_margin="8dp"
-            app:items="@{viewModel.currentPlaces}"/>
+            android:id="@+id/swipe_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                app:items="@{viewModel.currentPlaces}"/>
+        </android.support.v4.widget.SwipeRefreshLayout>
     </RelativeLayout>
 </layout>
