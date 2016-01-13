@@ -24,6 +24,7 @@ project.afterEvaluate {
                            '**/BuildConfig.*',
                            '**/*Application*.*',
                            '**/*Component*.*',
+                           '**/UiUtils.*',
                            '**/*BR*.*',
                            '**/*Adapter*.*',
                            '**/*Fragment*.*',
