@@ -8,62 +8,41 @@ jacoco {
 }
 
 project.afterEvaluate {
-    // Grab all build types and product flavors
-    def buildTypes = android.buildTypes.collect { type -> type.name }
-    def productFlavors = android.productFlavors.collect { flavor -> flavor.name }
+    // Create coverage task of form 'testFlavorTypeCoverage' depending on 'testFlavorTypeUnitTest'
+    task "jacocoTestReport"(type: JacocoReport, dependsOn: "test") {
+        group = 'Reporting'
+        description = "Generate Jacoco coverage reports for the debug build."
 
-    // When no product flavors defined, use empty
-    if (!productFlavors) productFlavors.add('')
+        classDirectories = fileTree(
+                dir: "${project.buildDir}/intermediates/classes/debug",
+                excludes: ['**/R.class',
+                           '**/R$*.class',
+                           '**/*$ViewInjector*.*',
+                           '**/*$ViewBinder*.*',
+                           '**/BuildConfig.*',
+                           '**/*Fragment*.*',
+                           '**/*Activity*.*',
+                           '**/*ViewHolder*.*',
+                           '**/Manifest*.*',
+                           '**/*$Lambda$*.*', // Jacoco can not handle several "$" in class name.
+                           '**/*Module.*', // Modules for Dagger.
+                           '**/*Dagger*.*', // Dagger auto-generated code.
+                           '**/*MembersInjector*.*', // Dagger auto-generated code.
+                           '**/*_Provide*Factory*.*'] // Dagger auto-generated code.
+        )
 
-    productFlavors.each { productFlavorName ->
-        buildTypes.each { buildTypeName ->
-            def sourceName, sourcePath
-            if (!productFlavorName) {
-                sourceName = sourcePath = "${buildTypeName}"
-            } else {
-                sourceName = "${productFlavorName}${buildTypeName.capitalize()}"
-                sourcePath = "${productFlavorName}/${buildTypeName}"
-            }
-            def testTaskName = "test${sourceName.capitalize()}UnitTest"
-            def coverageTaskName = "${testTaskName}Coverage"
+        def coverageSourceDirs = [
+                'src/main/java',
+        ]
+        additionalSourceDirs = files(coverageSourceDirs)
+        sourceDirectories = files(coverageSourceDirs)
+        executionData = files("${project.buildDir}/jacoco/jacocoTestReport.exec")
 
-            // Create coverage task of form 'testFlavorTypeCoverage' depending on 'testFlavorTypeUnitTest'
-            task "${coverageTaskName}"(type: JacocoReport, dependsOn: "$testTaskName") {
-                group = 'Reporting'
-                description = "Generate Jacoco coverage reports for the ${sourceName.capitalize()} build."
-
-                classDirectories = fileTree(
-                        dir: "${project.buildDir}/intermediates/classes/${sourcePath}",
-                        excludes: ['**/R.class',
-                                   '**/R$*.class',
-                                   '**/*$ViewInjector*.*',
-                                   '**/*$ViewBinder*.*',
-                                   '**/BuildConfig.*',
-                                   '**/*Fragment*.*',
-                                   '**/*Activity*.*',
-                                   '**/*ViewHolder*.*',
-                                   '**/Manifest*.*',
-                                   '**/*$Lambda$*.*', // Jacoco can not handle several "$" in class name.
-                                   '**/*Module.*', // Modules for Dagger.
-                                   '**/*Dagger*.*', // Dagger auto-generated code.
-                                   '**/*MembersInjector*.*', // Dagger auto-generated code.
-                                   '**/*_Provide*Factory*.*'] // Dagger auto-generated code.
-                )
-
-                def coverageSourceDirs = [
-                        'src/main/java',
-                ]
-                additionalSourceDirs = files(coverageSourceDirs)
-                sourceDirectories = files(coverageSourceDirs)
-                executionData = files("${project.buildDir}/jacoco/${testTaskName}.exec")
-
-                reports {
-                    xml.enabled = true
-                    html.enabled = true
-                }
-            }
-
-            build.dependsOn "${coverageTaskName}"
+        reports {
+            xml.enabled = true
+            html.enabled = true
         }
     }
+
+    build.dependsOn "jacocoTestReport"
 }

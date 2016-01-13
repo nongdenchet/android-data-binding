@@ -13,6 +13,6 @@ before_install:
   - export JAVA8_HOME=/usr/lib/jvm/java-8-oracle
   - export JAVA_HOME=$JAVA8_HOME
 script:
-  - ./gradlew testDebugUnitTest
+  - ./gradlew test --continue
 after_success:
- - ./gradlew testDebugUnitTestCoverage coveralls
+ - ./gradlew jacocoTestReport coveralls
