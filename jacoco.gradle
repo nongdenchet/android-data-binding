@@ -36,7 +36,7 @@ project.afterEvaluate {
         ]
         additionalSourceDirs = files(coverageSourceDirs)
         sourceDirectories = files(coverageSourceDirs)
-        executionData = files("${project.buildDir}/jacoco/jacocoTestReport.exec")
+        executionData = files("${project.buildDir}/jacoco/testDebugUnitTest.exec")
 
         reports {
             xml.enabled = true
