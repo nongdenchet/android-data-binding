@@ -23,10 +23,12 @@ import apidez.com.databinding.view.adapter.PlacesAdapter;
 import apidez.com.databinding.viewmodel.IPlacesViewModel;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 public class PlacesFragment extends BaseFragment {
     private FragmentPlacesBinding binding;
+    private ProgressDialog mProgressDialog;
 
     @Inject
     IPlacesViewModel mViewModel;
@@ -72,11 +74,26 @@ public class PlacesFragment extends BaseFragment {
 
         // Swipe to refresh
         binding.swipeRefresh.setOnRefreshListener(this::downloadData);
+
+        // Progress dialog
+        mProgressDialog = new ProgressDialog(getContext());
+        mProgressDialog.setMessage(getString(R.string.loading));
+        mProgressDialog.setCancelable(false);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mViewModel.progress()
+                .observeOn(AndroidSchedulers.mainThread())
+                .takeUntil(preDestroy())
+                .subscribe(done -> {
+                    if (done) {
+                        mProgressDialog.hide();
+                    } else {
+                        mProgressDialog.show();
+                    }
+                });
         downloadData();
     }
 
@@ -99,6 +116,14 @@ public class PlacesFragment extends BaseFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_places, menu);
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+        }
+        super.onDestroyView();
     }
 
     @Override

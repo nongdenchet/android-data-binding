@@ -23,4 +23,9 @@ public interface IPlacesViewModel {
      * Filter the places
      */
     void filterPlacesByType(String type);
+
+    /**
+     * Porgressbar
+     */
+    Observable<Boolean> progress();
 }

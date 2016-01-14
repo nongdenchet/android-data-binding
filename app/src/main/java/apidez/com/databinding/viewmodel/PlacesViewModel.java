@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import apidez.com.databinding.model.api.IPlacesApi;
 import apidez.com.databinding.model.entity.Place;
 import rx.Observable;
+import rx.subjects.BehaviorSubject;
 
 /**
  * Created by nongdenchet on 10/21/15.
@@ -19,10 +20,12 @@ public class PlacesViewModel extends BaseObservable implements IPlacesViewModel 
     private IPlacesApi mPlacesApi;
     private final int TIME_OUT = 5;
     private final int RETRY = 3;
+    private boolean firstTime = true;
     private List<Place> allPlaces;
 
     // Observable property
     private ObservableArrayList<Place> mPlaces = new ObservableArrayList<>();
+    private BehaviorSubject<Boolean> progress = BehaviorSubject.create(false);
 
     public PlacesViewModel(@NonNull IPlacesApi placesApi) {
         mPlacesApi = placesApi;
@@ -43,9 +46,16 @@ public class PlacesViewModel extends BaseObservable implements IPlacesViewModel 
     public Observable<Boolean> fetchAllPlaces() {
         return mPlacesApi.placesResult()
                 .map(googleSearchResult -> {
+                    // update list
                     allPlaces = googleSearchResult.results;
                     mPlaces.clear();
                     mPlaces.addAll(allPlaces);
+
+                    // check first time
+                    if (firstTime) {
+                        progress.onNext(true);
+                        firstTime = false;
+                    }
                     return true;
                 })
                 .timeout(TIME_OUT, TimeUnit.SECONDS)
@@ -66,6 +76,11 @@ public class PlacesViewModel extends BaseObservable implements IPlacesViewModel 
                     .filter(place -> place.getTypes().contains(getApiType(type)))
                     .subscribe(mPlaces::add);
         }
+    }
+
+    @Override
+    public Observable<Boolean> progress() {
+        return progress.asObservable();
     }
 
     /**
