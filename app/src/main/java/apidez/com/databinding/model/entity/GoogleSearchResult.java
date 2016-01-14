@@ -8,6 +8,7 @@ import java.util.List;
  * Created by nongdenchet on 10/21/15.
  */
 public class GoogleSearchResult {
+
     @SerializedName("status")
     public String status;
 

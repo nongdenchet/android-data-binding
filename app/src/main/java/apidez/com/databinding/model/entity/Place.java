@@ -13,7 +13,8 @@ import java.util.UUID;
 /**
  * Created by nongdenchet on 10/21/15.
  */
-public class Place extends BaseObservable implements Parcelable {
+public class Place extends BaseObservable {
+
     @SerializedName("icon")
     private String icon;
 
@@ -24,26 +25,7 @@ public class Place extends BaseObservable implements Parcelable {
     private String name;
 
     @SerializedName("types")
-    List<String> types;
-
-    protected Place(Parcel in) {
-        icon = in.readString();
-        id = in.readString();
-        name = in.readString();
-        types = in.createStringArrayList();
-    }
-
-    public static final Creator<Place> CREATOR = new Creator<Place>() {
-        @Override
-        public Place createFromParcel(Parcel in) {
-            return new Place(in);
-        }
-
-        @Override
-        public Place[] newArray(int size) {
-            return new Place[size];
-        }
-    };
+    private List<String> types;
 
     private Place(String icon, String id, String name, List<String> types) {
         this.icon = icon;
@@ -70,24 +52,11 @@ public class Place extends BaseObservable implements Parcelable {
         return types;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(icon);
-        dest.writeString(id);
-        dest.writeString(name);
-        dest.writeStringList(types);
-    }
-
     public static class Builder {
         private String id = UUID.randomUUID().toString();
         private String icon;
         private String name;
-        List<String> types;
+        private List<String> types;
 
         public Builder name(String name) {
             this.name = name;

@@ -6,6 +6,10 @@ import java.util.Random;
  * Created by nongdenchet on 10/21/15.
  */
 public class StringUtils {
+
+    /**
+     * Generate random string
+     */
     public static String generateString(String characters, int length) {
         Random rand = new Random();
         char[] text = new char[length];
@@ -15,6 +19,9 @@ public class StringUtils {
         return new String(text);
     }
 
+    /**
+     * Check empty string
+     */
     public static boolean isEmpty(String string) {
         return string == null || string.isEmpty();
     }

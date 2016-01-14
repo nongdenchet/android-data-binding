@@ -11,6 +11,7 @@ import rx.Observable;
  * Created by nongdenchet on 10/3/15.
  */
 public class PurchaseApi implements IPurchaseApi {
+
     private Gson mGson;
 
     public PurchaseApi(@NonNull Gson gson) {
@@ -26,10 +27,11 @@ public class PurchaseApi implements IPurchaseApi {
             try {
                 String json = mGson.toJson(purchase);
                 Thread.sleep((json.length() % 3) * 1000);
+                if (json.length() % 3 == 2) throw new Exception("fail");
                 subscriber.onNext(true);
                 subscriber.onCompleted();
-            } catch (Exception exception) {
-                subscriber.onError(exception);
+            } catch (Exception e) {
+                subscriber.onError(e);
             }
         });
     }

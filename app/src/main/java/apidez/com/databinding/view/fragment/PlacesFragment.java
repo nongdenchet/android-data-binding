@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import javax.inject.Inject;
 
@@ -85,8 +86,13 @@ public class PlacesFragment extends BaseFragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .takeUntil(preDestroy())
-                .doOnTerminate(() -> binding.swipeRefresh.setRefreshing(false))
-                .subscribe(success -> {}, throwable -> {});
+                .subscribe(success -> {
+                            binding.swipeRefresh.setRefreshing(false);
+                        },
+                        throwable -> {
+                            Toast.makeText(getContext(), "Problem occurs", Toast.LENGTH_SHORT);
+                            binding.swipeRefresh.setRefreshing(false);
+                        });
     }
 
     @Override

@@ -17,7 +17,7 @@ public class TestDataUtils {
      */
     public static GoogleSearchResult nearByData() {
         List<Place> places = new ArrayList<>();
-        places.add(new Place.Builder().name("A").types(Arrays.asList("food", "cafe")).build());
+        places.add(new Place.Builder().icon("url").name("A").types(Arrays.asList("food", "cafe")).build());
         places.add(new Place.Builder().name("B").types(Arrays.asList("food", "movie_theater")).build());
         places.add(new Place.Builder().name("C").types(Arrays.asList("store")).build());
         places.add(new Place.Builder().name("D").types(Arrays.asList("store")).build());

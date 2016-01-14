@@ -9,7 +9,7 @@ jacoco {
 
 project.afterEvaluate {
     // Create coverage task of form 'testFlavorTypeCoverage' depending on 'testFlavorTypeUnitTest'
-    task "jacocoTestReport"(type: JacocoReport, dependsOn: "test") {
+    task "jacocoTestReport"(type: JacocoReport, dependsOn: "testDebugUnitTest") {
         group = 'Reporting'
         description = "Generate Jacoco coverage reports for the debug build."
 
@@ -25,17 +25,19 @@ project.afterEvaluate {
                            '**/*Application*.*',
                            '**/*Component*.*',
                            '**/UiUtils.*',
+                           '**/*Binding*.*',
+                           '**/*Retrofit*.*',
                            '**/*BR*.*',
                            '**/*Adapter*.*',
                            '**/*Fragment*.*',
                            '**/*Activity*.*',
                            '**/*ViewHolder*.*',
                            '**/Manifest*.*',
-                           '**/*$Lambda$*.*', // Jacoco can not handle several "$" in class name.
-                           '**/*Module.*', // Modules for Dagger.
-                           '**/*Dagger*.*', // Dagger auto-generated code.
-                           '**/*MembersInjector*.*', // Dagger auto-generated code.
-                           '**/*_Provide*Factory*.*'] // Dagger auto-generated code.
+                           '**/*$Lambda$*.*',
+                           '**/*Module.*',
+                           '**/*Dagger*.*',
+                           '**/*MembersInjector*.*',
+                           '**/*_Provide*Factory*.*']
         )
 
         def coverageSourceDirs = [

@@ -58,6 +58,7 @@ public class PlacesViewModel extends BaseObservable implements IPlacesViewModel 
     @Override
     public void filterPlacesByType(String type) {
         mPlaces.clear();
+        if (type == null) return;
         if (type.equalsIgnoreCase("all")) {
             mPlaces.addAll(allPlaces);
         } else {
@@ -71,12 +72,7 @@ public class PlacesViewModel extends BaseObservable implements IPlacesViewModel 
      * Helpers change type to api_type
      */
     private String getApiType(String type) {
-        type = type.toLowerCase();
-        switch (type) {
-            case "theater":
-                return "movie_theater";
-            default:
-                return type;
-        }
+        String newType = type.toLowerCase();
+        return newType.equals("theater") ? "movie_theater" : newType;
     }
 }

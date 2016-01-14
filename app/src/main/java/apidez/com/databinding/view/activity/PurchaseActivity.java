@@ -94,11 +94,12 @@ public class PurchaseActivity extends BaseActivity implements IPurchaseHandler {
                 .observeOn(AndroidSchedulers.mainThread())
                 .takeUntil(preDestroy())
                 .doOnSubscribe(mProgressDialog::show)
-                .doOnTerminate(mProgressDialog::hide)
                 .subscribe(success -> {
                     UiUtils.showDialog(getString(R.string.success), this);
+                    mProgressDialog.hide();
                 }, throwable -> {
                     UiUtils.showDialog(getString(R.string.error), this);
+                    mProgressDialog.hide();
                 });
     }
 

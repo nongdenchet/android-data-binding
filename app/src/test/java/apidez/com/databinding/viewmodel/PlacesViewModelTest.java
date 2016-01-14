@@ -1,6 +1,7 @@
 package apidez.com.databinding.viewmodel;
 
 import android.test.suitebuilder.annotation.MediumTest;
+import android.test.suitebuilder.annotation.SmallTest;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +25,7 @@ import static org.mockito.Mockito.when;
 /**
  * Created by nongdenchet on 10/30/15.
  */
-@MediumTest
+@SmallTest
 @RunWith(JUnit4.class)
 public class PlacesViewModelTest {
     private PlacesViewModel placesViewModel;
@@ -82,6 +83,11 @@ public class PlacesViewModelTest {
         assertEquals(getAndFilterWith("restaurant").size(), 3);
         getAndFilterWith("cafe");
         assertEquals(getAndFilterWith("restaurant").size(), 3);
+    }
+
+    @Test
+    public void typeNull() {
+        assertEquals(getAndFilterWith(null).size(), 0);
     }
 
     @Test
