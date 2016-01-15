@@ -48,7 +48,6 @@ public class PlacesViewModel extends BaseObservable implements IPlacesViewModel 
                 .map(googleSearchResult -> {
                     // update list
                     allPlaces = googleSearchResult.results;
-                    mPlaces.clear();
                     mPlaces.addAll(allPlaces);
 
                     // check first time
@@ -57,9 +56,7 @@ public class PlacesViewModel extends BaseObservable implements IPlacesViewModel 
                         firstTime = false;
                     }
                     return true;
-                })
-                .timeout(TIME_OUT, TimeUnit.SECONDS)
-                .retry(RETRY);
+                });
     }
 
     /**

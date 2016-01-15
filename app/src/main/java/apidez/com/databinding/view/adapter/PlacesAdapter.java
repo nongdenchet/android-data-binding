@@ -20,11 +20,10 @@ import apidez.com.databinding.model.entity.Place;
  */
 public class PlacesAdapter extends BaseRecyclerViewAdapter<Place> {
     private Context mContext;
-    private List<Place> mPlaces;
 
     public PlacesAdapter(Context context) {
         mContext = context;
-        mPlaces = new ArrayList<>();
+        mItems = new ArrayList<>();
     }
 
     @Override
@@ -36,7 +35,7 @@ public class PlacesAdapter extends BaseRecyclerViewAdapter<Place> {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         PlaceViewHolder holder = (PlaceViewHolder) viewHolder;
-        Place place = mPlaces.get(position);
+        Place place = mItems.get(position);
         holder.getBinding().setVariable(BR.place, place);
         holder.getBinding().executePendingBindings();
         holder.itemView.setOnClickListener(v -> {
@@ -45,7 +44,7 @@ public class PlacesAdapter extends BaseRecyclerViewAdapter<Place> {
 
     @Override
     public int getItemCount() {
-        return mPlaces.size();
+        return mItems.size();
     }
 
     // this view holder hold the view of one particular card
@@ -60,13 +59,5 @@ public class PlacesAdapter extends BaseRecyclerViewAdapter<Place> {
         public ItemPlaceBinding getBinding() {
             return binding;
         }
-    }
-
-    /**
-     * Update the list item
-     */
-    public void setItems(List<Place> places) {
-        mPlaces = places;
-        notifyDataSetChanged();
     }
 }
