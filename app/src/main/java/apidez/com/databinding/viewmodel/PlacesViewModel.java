@@ -11,6 +11,8 @@ import java.util.concurrent.TimeUnit;
 import apidez.com.databinding.model.api.IPlacesApi;
 import apidez.com.databinding.model.entity.Place;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
 
 /**
@@ -19,7 +21,6 @@ import rx.subjects.BehaviorSubject;
 public class PlacesViewModel extends BaseObservable implements IPlacesViewModel {
     private IPlacesApi mPlacesApi;
     private final int TIME_OUT = 5;
-    private final int RETRY = 3;
     private boolean firstTime = true;
     private List<Place> allPlaces;
 
@@ -45,9 +46,13 @@ public class PlacesViewModel extends BaseObservable implements IPlacesViewModel 
     @Override
     public Observable<Boolean> fetchAllPlaces() {
         return mPlacesApi.placesResult()
+                .timeout(TIME_OUT, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
                 .map(googleSearchResult -> {
                     // update list
                     allPlaces = googleSearchResult.results;
+                    mPlaces.clear();
                     mPlaces.addAll(allPlaces);
 
                     // check first time

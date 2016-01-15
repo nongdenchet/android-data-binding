@@ -100,8 +100,6 @@ public class PlacesFragment extends BaseFragment {
     private void downloadData() {
         // fetch all places
         mViewModel.fetchAllPlaces()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
                 .takeUntil(preDestroy())
                 .subscribe(success -> {
                             binding.swipeRefresh.setRefreshing(false);
