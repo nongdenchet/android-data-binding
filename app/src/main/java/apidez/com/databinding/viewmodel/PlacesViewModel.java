@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import apidez.com.databinding.model.api.IPlacesApi;
 import apidez.com.databinding.model.entity.Place;
 import rx.Observable;
+import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
@@ -47,8 +48,6 @@ public class PlacesViewModel extends BaseObservable implements IPlacesViewModel 
     public Observable<Boolean> fetchAllPlaces() {
         return mPlacesApi.placesResult()
                 .timeout(TIME_OUT, TimeUnit.SECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
                 .map(googleSearchResult -> {
                     // update list
                     allPlaces = googleSearchResult.results;

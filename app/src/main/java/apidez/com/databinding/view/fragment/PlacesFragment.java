@@ -101,6 +101,8 @@ public class PlacesFragment extends BaseFragment {
         // fetch all places
         mViewModel.fetchAllPlaces()
                 .takeUntil(preDestroy())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(success -> {
                             binding.swipeRefresh.setRefreshing(false);
                         },

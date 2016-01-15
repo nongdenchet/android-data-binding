@@ -1,6 +1,5 @@
 package apidez.com.databinding.viewmodel;
 
-import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import org.junit.Before;
@@ -9,7 +8,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +17,9 @@ import apidez.com.databinding.model.entity.GoogleSearchResult;
 import apidez.com.databinding.model.entity.Place;
 import apidez.com.databinding.utils.TestDataUtils;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.observers.TestSubscriber;
+import rx.schedulers.Schedulers;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
