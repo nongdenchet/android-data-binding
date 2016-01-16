@@ -71,7 +71,7 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Re
             if (adapter == null) {
                 return;
             }
-            mHandler.post(adapter::notifyDataSetChanged);
+            mHandler.post(() -> adapter.notifyItemRangeChanged(positionStart, itemCount));
         }
 
         @Override
