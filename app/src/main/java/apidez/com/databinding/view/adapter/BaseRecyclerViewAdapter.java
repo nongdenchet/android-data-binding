@@ -62,7 +62,7 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Re
             if (adapter == null) {
                 return;
             }
-            mHandler.post(adapter::notifyDataSetChanged);
+            adapter.notifyDataSetChanged();
         }
 
         @Override
@@ -71,7 +71,7 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Re
             if (adapter == null) {
                 return;
             }
-            mHandler.post(() -> adapter.notifyItemRangeChanged(positionStart, itemCount));
+            adapter.notifyItemRangeChanged(positionStart, itemCount);
         }
 
         @Override
@@ -80,7 +80,7 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Re
             if (adapter == null) {
                 return;
             }
-            mHandler.post(() -> adapter.notifyItemRangeInserted(positionStart, itemCount));
+            adapter.notifyItemRangeInserted(positionStart, itemCount);
         }
 
         @Override
@@ -89,11 +89,9 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Re
             if (adapter == null) {
                 return;
             }
-            mHandler.post(() -> {
-                for (int i = 0; i < itemCount; i++) {
-                    adapter.notifyItemMoved(fromPosition + i, toPosition + i);
-                }
-            });
+            for (int i = 0; i < itemCount; i++) {
+                adapter.notifyItemMoved(fromPosition + i, toPosition + i);
+            }
         }
 
         @Override
@@ -102,7 +100,7 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Re
             if (adapter == null) {
                 return;
             }
-            mHandler.post(() -> adapter.notifyItemRangeRemoved(positionStart, itemCount));
+            adapter.notifyItemRangeRemoved(positionStart, itemCount);
         }
     }
 }

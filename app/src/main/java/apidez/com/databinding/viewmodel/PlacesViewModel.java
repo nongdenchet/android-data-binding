@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import apidez.com.databinding.model.api.IPlacesApi;
 import apidez.com.databinding.model.entity.Place;
+import apidez.com.databinding.utils.RxUtils;
 import rx.Observable;
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
@@ -20,17 +21,22 @@ import rx.subjects.BehaviorSubject;
  * Created by nongdenchet on 10/21/15.
  */
 public class PlacesViewModel extends BaseObservable implements IPlacesViewModel {
-    private IPlacesApi mPlacesApi;
     private final int TIME_OUT = 5;
     private boolean firstTime = true;
     private List<Place> allPlaces;
+
+    public Scheduler mMainThread;
+    public Scheduler mIOThread;
+    private IPlacesApi mPlacesApi;
 
     // Observable property
     private ObservableArrayList<Place> mPlaces = new ObservableArrayList<>();
     private BehaviorSubject<Boolean> progress = BehaviorSubject.create(false);
 
-    public PlacesViewModel(@NonNull IPlacesApi placesApi) {
+    public PlacesViewModel(@NonNull IPlacesApi placesApi, @NonNull RxUtils.SchedulerHolder schedulerHolder) {
         mPlacesApi = placesApi;
+        mMainThread = schedulerHolder.mainScheduler;
+        mIOThread = schedulerHolder.ioScheduler;
     }
 
     /**
@@ -48,6 +54,8 @@ public class PlacesViewModel extends BaseObservable implements IPlacesViewModel 
     public Observable<Boolean> fetchAllPlaces() {
         return mPlacesApi.placesResult()
                 .timeout(TIME_OUT, TimeUnit.SECONDS)
+                .subscribeOn(mIOThread)
+                .observeOn(mMainThread)
                 .map(googleSearchResult -> {
                     // update list
                     allPlaces = googleSearchResult.results;

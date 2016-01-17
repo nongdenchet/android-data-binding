@@ -31,6 +31,7 @@ project.afterEvaluate {
                            '**/*Adapter*.*',
                            '**/*Fragment*.*',
                            '**/*Activity*.*',
+                           '**/*Rx*.*',
                            '**/*ViewHolder*.*',
                            '**/Manifest*.*',
                            '**/*$Lambda$*.*',

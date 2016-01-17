@@ -15,9 +15,9 @@ import java.util.List;
 import apidez.com.databinding.model.api.IPlacesApi;
 import apidez.com.databinding.model.entity.GoogleSearchResult;
 import apidez.com.databinding.model.entity.Place;
+import apidez.com.databinding.utils.RxUtils;
 import apidez.com.databinding.utils.TestDataUtils;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.observers.TestSubscriber;
 import rx.schedulers.Schedulers;
 
@@ -37,7 +37,8 @@ public class PlacesViewModelTest {
     @Before
     public void setUpViewModel() {
         placesApi = Mockito.mock(IPlacesApi.class);
-        placesViewModel = new PlacesViewModel(placesApi);
+        placesViewModel = new PlacesViewModel(placesApi,
+                new RxUtils.SchedulerHolder(Schedulers.immediate(), Schedulers.immediate()));
         testSubscriber = TestSubscriber.create();
         when(placesApi.placesResult()).thenReturn(testDataObservable());
     }
